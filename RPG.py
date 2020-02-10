@@ -9,7 +9,7 @@ pygame.init()
 pygame.mixer.music.load('data/c245b81d72ab0bb.wav')
 pygame.mixer.music.play(-1)
 
-def load_image(name):
+def load_image(name):  #обработка 
     fullname = os.path.join('data', name)
     image = pygame.image.load(fullname).convert()
     image.set_colorkey((0, 255, 0))
@@ -20,23 +20,23 @@ WHITE = (255, 255, 255)
 BLUE =  (  0,   0, 255)
 GREEN = (  150, random.randrange(150, 255, 15), 105)
 RED =   (255,   0,   0)
-fGreen = GREEN
-weapons1 = ['zombie hand:4', 'small sword:5', 'daggers:6']
-armor1 = ['wooden armor:2', 'plastic armor:3', 'chain armor:4']
-weapons2 = ['magic book:7', 'hook:8', 'knuckle:9']
-armor2 = ['iron armor:5', 'magic water armor:6', 'ninja clothes:7']
+fGreen = GREEN  #Заполняем экран рандомным оттенком зелёного
+weapons1 = ['zombie hand:4', 'small sword:5', 'daggers:6']  #оружие 1 лвл
+armor1 = ['wooden armor:2', 'plastic armor:3', 'chain armor:4']  #броня 1 лвл
+weapons2 = ['magic book:7', 'hook:8', 'knuckle:9']  #оружие 2 лвл
+armor2 = ['iron armor:5', 'magic water armor:6', 'ninja clothes:7']  #броня 2 лвл
 lvl = 0
-damage = 2
+damage = 2  
 armor = 1
 life = 100
-next_l = 0
+next_l = 0 #для проверки переключения уровня
 money = 0
-hpx, hpy = 400, 400
-attack = None
-x, u = None, None
-running_sprite = True
+hpx, hpy = 400, 400  #позиция героя
+attack = None  #идёт битва
+x, u = None, None #переменные из сундука, отвечают за выдачу оружия и брони соответсвенно
+running_sprite = True  #все спрайты работают
 size = width, height = [800, 800]
-transportC = None
+transportC = None  #переход на следующий лвл через какую либо сторону
 screen = pygame.display.set_mode(size)
 all_sprites = pygame.sprite.Group()
 
@@ -140,22 +140,22 @@ class Player(pygame.sprite.Sprite):
                 elif go_fast == 0:
                     self.rect.x += 1
             
-            if self.rect.x < -32:
+            if self.rect.x < -32: #ушёл налево
                 transportC = 'l'
                 self.rect.x = width - 1
                 lvl += 1
                 fGreen = (105, random.randrange(150, 255, 15), 105)
-            elif self.rect.x > width:
+            elif self.rect.x > width: #ушёл направо
                 transportC = 'r'
                 self.rect.x = -31
                 lvl += 1
                 fGreen = (105, random.randrange(150, 255, 15), 105)
-            elif self.rect.y < -46:
+            elif self.rect.y < -46: #ушёл вверх
                 transportC = 'u'
                 self.rect.y = height - 1
                 lvl += 1
                 fGreen = (105, random.randrange(150, 255, 15), 105)
-            elif self.rect.y > height:
+            elif self.rect.y > height: #ушёл вниз
                 transportC = 'd'
                 self.rect.y = -45
                 lvl += 1
@@ -191,11 +191,11 @@ class Player(pygame.sprite.Sprite):
             yt5 = 10
             screen.blit(b5, (xt5, yt5))
             
-            if next_l == 2:
+            if next_l == 2: #переход на следующий лвл
                 transportC = None
                 next_l = 0
                 
-        if life <= 0:
+        if life <= 0: #смэрть
             attack = None
             running_sprite = False
             a0 = pygame.font.Font(None, 50)
@@ -204,14 +204,14 @@ class Player(pygame.sprite.Sprite):
             yt0 = 510
             screen.blit(b0, (xt0, yt0))
         
-        if lvl == 21 and money >= 40:
+        if lvl == 21 and money >= 40: #победа
             running_sprite = False
             ag = pygame.font.Font(None, 50)
             bg = ag.render(f'You win', 1, RED)
             xtg = 500
             ytg = 510
             screen.blit(bg, (xtg, ytg))
-        elif lvl == 21 and money < 40:
+        elif lvl == 21 and money < 40: #проигрыш
             running_sprite = False
             aq = pygame.font.Font(None, 50)
             bq = aq.render(f'You lose', 1, RED)
@@ -245,7 +245,7 @@ class Chest(pygame.sprite.Sprite):
                     self.rect.x = -1000
                     self.rect.y = -1000
                     if lvl // 10 == 0:
-                        j = random.random()
+                        j = random.random() #рандомное выпадение вещей
                         if j >= 0.5:
                             rnd = random.randint(1, 100)
                             if 0 < rnd < 60:
@@ -334,7 +334,7 @@ class Chest(pygame.sprite.Sprite):
                     
                             
                            
-            if transportC != None:
+            if transportC != None: # переход на следующий лвл
                 self.rect.x = random.randrange(40, 730)
                 self.rect.y = random.randrange(40, 730)
                 next_l += 1
@@ -364,10 +364,9 @@ class Skeletron(pygame.sprite.Sprite):
         self.damage = 1
         self.armor = 1
         self.life = 5
-        self.k = 0
-        self.at = 0
-        self.bat = 1
-        self.no = 0
+        self.k = 0 #происходит битва или нет
+        self.at = 0 #цикл атак
+        self.bat = 1 #герой может нанести урон
 
     def update(self, args):
         global transportC
@@ -378,13 +377,13 @@ class Skeletron(pygame.sprite.Sprite):
         
         if running_sprite == True:
             blocks_hit_list = pygame.sprite.spritecollide(self, all_sprites, False)
-            if len(blocks_hit_list) > 1:
+            if len(blocks_hit_list) > 1: #проверка столкновения с персонажем
                 if '[<Player sprite(in 1 groups)>, <Skeletron sprite(in 1 groups)>]' == str(blocks_hit_list):
-                    self.k = 1
+                    self.k = 1 #битва идёт
             else:
-                self.k = 0
+                self.k = 0 #битва не идёт
             
-            if transportC != None:
+            if transportC != None: # переход на следующий лвл, новые характеристики
                 self.rect.x = random.randrange(40, 710)
                 self.rect.y = random.randrange(40, 710)
                 self.damage = (lvl // 5) + 1
@@ -421,13 +420,13 @@ class Skeletron(pygame.sprite.Sprite):
                     if self.tik == 40:
                         self.image = Skeletron.image3_up
             elif self.k == 1:
-                attack = 'skel'
+                attack = 'skel' #битва идёт с скелетом
                 if attack == 'skel':
-                    if self.life <= 0:
+                    if self.life <= 0: #смерть
                         self.rect.x = 3000
                         self.rect.y = 3000
-                        attack = None
-                    if args.type == pygame.MOUSEBUTTONDOWN and self.bat == 1:
+                        attack = None #битва не идёт ни с кем
+                    if args.type == pygame.MOUSEBUTTONDOWN and self.bat == 1: #удар героя
                         self.bat = 0
                         self.life -= damage
                         print('-------------------------')
@@ -439,25 +438,25 @@ class Skeletron(pygame.sprite.Sprite):
                             print('you find 2$')
                             money += 2
                         print('-------------------------')
-                    self.at += 1
+                    self.at += 1 #частота атак
                     if self.at == 200:
                         iii = random.randint(0, 100)
-                        if armor > iii > 0:
+                        if armor > iii > 0: #срабатывание брони
                             life -= self.damage // 2
                             print('-------------------------')
                             print(f'you get damage {self.damage // 2}')
                             print('-------------------------')
-                        else:
+                        else: #просто получение урона
                             life -= self.damage
                             print('-------------------------')
                             print(f'you get damage {self.damage}')
                             print('-------------------------')
                         self.at = 0
-                        self.bat = 1
-            elif self.k == 0:
-                attack = None
+                        self.bat = 1 #герой может нанести одну атаку
+            elif self.k == 0: #прекращение битвы
+                attack = None 
         else:
-            self.image = Skeletron.image1_down
+            self.image = Skeletron.image1_down #скелет просто стоит
                 
 
 
@@ -469,12 +468,13 @@ img = pygame.image.load('data\icon.png')
 pygame.display.set_icon(img)
 
 
-
+#дивежния героя --------
 go_up = 0
 go_down = 0
 go_left = 0
 go_right = 0
 go_fast = 0
+#-----------------------
 fps = 120
 running = True
 clock = pygame.time.Clock()
