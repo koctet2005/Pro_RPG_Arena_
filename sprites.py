@@ -252,11 +252,11 @@ class Chest(pygame.sprite.Sprite):
                         elif j < 0.5:
                             rnd = random.randint(1, 100)
                             if 0 < rnd < 60:
-                                u = ARMOR_RARE[0].split(':')
+                                self.game.u = ARMOR_RARE[0].split(':')
                             elif 60 < rnd < 90:
-                                u = ARMOR_RARE[1].split(':')
+                                self.game.u = ARMOR_RARE[1].split(':')
                             elif 90 < rnd < 100:   
-                                u = ARMOR_RARE[2].split(':')
+                                self.game.u = ARMOR_RARE[2].split(':')
 
                             if self.game.player.armor < int(self.game.u[1]):
                                 self.game.player.armor = int(self.game.u[1])
@@ -279,18 +279,18 @@ class Skeletron(pygame.sprite.Sprite):
     def __init__(self, game):
         super().__init__(game.all_sprites)
         self.game = game
-        self.image1_down = load_image('skel1_down.png')
-        self.image2_down = load_image('skel2_down.png')
-        self.image3_down = load_image('skel3_down.png')
-        self.image1_up = load_image('skel1_up.png')
-        self.image2_up = load_image('skel2_up.png')
-        self.image3_up = load_image('skel3_up.png')
-        self.image1_right = load_image('skel1_right.png')
-        self.image2_right = load_image('skel2_right.png')
-        self.image3_right = load_image('skel3_right.png')
-        self.image1_left = load_image('skel1_left.png')
-        self.image2_left = load_image('skel2_left.png')
-        self.image3_left = load_image('skel3_left.png')
+        self.image1_down = load_image('skel1_down.png', -1)
+        self.image2_down = load_image('skel2_down.png', -1)
+        self.image3_down = load_image('skel3_down.png', -1)
+        self.image1_up = load_image('skel1_up.png', -1)
+        self.image2_up = load_image('skel2_up.png', -1)
+        self.image3_up = load_image('skel3_up.png', -1)
+        self.image1_right = load_image('skel1_right.png', -1)
+        self.image2_right = load_image('skel2_right.png', -1)
+        self.image3_right = load_image('skel3_right.png', -1)
+        self.image1_left = load_image('skel1_left.png', -1)
+        self.image2_left = load_image('skel2_left.png', -1)
+        self.image3_left = load_image('skel3_left.png', -1)
         self.image = self.image1_down
         self.rect = self.image.get_rect()
         self.rect.x = -400
@@ -316,9 +316,9 @@ class Skeletron(pygame.sprite.Sprite):
             if self.game.transportC != None:
                 self.rect.x = random.randrange(40, 710)
                 self.rect.y = random.randrange(40, 710)
-                self.damage = (lvl // 5) + 1
-                self.armor = (lvl // 10) + 1
-                self.life = (lvl // 2) + 5
+                self.damage = (self.game.lvl // 5) + 1
+                self.armor = (self.game.lvl // 10) + 1
+                self.life = (self.game.lvl // 2) + 5
                 self.game.next_l += 1
             
             self.tik += 1
@@ -357,11 +357,11 @@ class Skeletron(pygame.sprite.Sprite):
                         self.rect.x = 3000
                         self.rect.y = 3000
                         self.game.player.attack = None
-                    if args.type == pygame.MOUSEBUTTONDOWN and self.bat == 1:
+                    if pygame.mouse.get_pressed() and self.bat == 1:
                         self.bat = 0
                         self.life -= self.game.player.damage
                         print('-------------------------')
-                        print(f'you caused damage {damage}')
+                        print(f'you caused damage {self.game.player.damage}')
                         if self.life > 0:
                             print(f'enemy lives {self.life}')
                         else:
@@ -372,7 +372,7 @@ class Skeletron(pygame.sprite.Sprite):
                     self.at += 1
                     if self.at == 200:
                         iii = random.randint(0, 100)
-                        if armor > iii > 0:
+                        if self.game.player.armor > iii > 0:
                             self.game.player.life -= self.damage // 2
                             print('-------------------------')
                             print(f'you get damage {self.damage // 2}')

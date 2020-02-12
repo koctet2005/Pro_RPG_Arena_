@@ -27,7 +27,7 @@ class Game:# Класс игры, чтобы хранить в нём всяку
         self.all_sprites = pygame.sprite.Group()
         self.player = sprites.Player(self)
         self.chst = sprites.Chest(self)
-        #self.skel = Skeletron(self)
+        self.skel = sprites.Skeletron(self)
         self.running = True
         self.run()
 
