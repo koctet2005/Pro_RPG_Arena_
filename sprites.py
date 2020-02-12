@@ -316,9 +316,9 @@ class Skeletron(pygame.sprite.Sprite):
             if self.game.transportC != None:
                 self.rect.x = random.randrange(40, 710)
                 self.rect.y = random.randrange(40, 710)
-                self.damage = (lvl // 5) + 1
-                self.armor = (lvl // 10) + 1
-                self.life = (lvl // 2) + 5
+                self.damage = (self.game.lvl // 5) + 1
+                self.armor = (self.game.lvl // 10) + 1
+                self.life = (self.game.lvl // 2) + 5
                 self.game.next_l += 1
             
             self.tik += 1
@@ -357,11 +357,11 @@ class Skeletron(pygame.sprite.Sprite):
                         self.rect.x = 3000
                         self.rect.y = 3000
                         self.game.player.attack = None
-                    if args.type == pygame.MOUSEBUTTONDOWN and self.bat == 1:
+                    if pygame.mouse.get_pressed() and self.bat == 1:
                         self.bat = 0
                         self.life -= self.game.player.damage
                         print('-------------------------')
-                        print(f'you caused damage {damage}')
+                        print(f'you caused damage {self.game.player.damage}')
                         if self.life > 0:
                             print(f'enemy lives {self.life}')
                         else:
@@ -372,7 +372,7 @@ class Skeletron(pygame.sprite.Sprite):
                     self.at += 1
                     if self.at == 200:
                         iii = random.randint(0, 100)
-                        if armor > iii > 0:
+                        if self.game.player.armor > iii > 0:
                             self.game.player.life -= self.damage // 2
                             print('-------------------------')
                             print(f'you get damage {self.damage // 2}')
